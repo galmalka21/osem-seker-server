@@ -99,6 +99,30 @@ router.post('/answer_question' , async (req , res) => {
     }
 })
 
+router.post('/change_question_date' , async (req ,res) => {
+    const {question_id , start_date , end_date , token} = req.body
+
+    if(token != "galmalkatoken"){
+        return res.status(401)
+    }
+
+    try {
+
+        const result = await sql.pool
+        .request()
+        .input('OnLineQ', sql.SQLInst.Int, question_id) 
+        .input('SDate', sql.SQLInst.DateTime, start_date)
+        .input('EDate', sql.SQLInst.DateTime, end_date)
+        .execute('SetOnLineQTest');
+        
+        return res.status(200).send({status: true});
+
+    } catch (e) {
+        console.log(`Error in route /change_question_date` , e);
+        return res.status(200).send({status: false , err: errors.SQL_ERROR});
+    }
+
+})
 
 
 module.exports = router;
