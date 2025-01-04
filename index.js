@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const port = 3000;
 
 app.use(cors({
-    origin: ['http://localhost:5173'], // Frontend URL
+    origin: ['http://localhost:5173' , 'https://witty-rock-00b5d0803.4.azurestaticapps.net/'], // Frontend URL
     credentials: true, // Allow cookies and credentials
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Allow necessary HTTP methods
     allowedHeaders: 'Content-Type,Authorization', // Allow headers
