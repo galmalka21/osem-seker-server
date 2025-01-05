@@ -11,6 +11,7 @@ router.get('/test' , (req ,res) => {
 
 router.post('/register' , async (req ,res) => {
     const {username , phone} = req.body
+    
     if(!username || !phone){
         return res.status(200).send({status: false , msg: errors.REGISTER_ERR})
     }
@@ -37,9 +38,7 @@ router.get('/is_question_active' , async (req ,res) => {
         const result = await sql.pool
         .request()
         .execute('IsQon');
-        console.log(result);
         
-
         return res.status(200).send({status: true , result: result.recordset});
 
     } catch (e) {
@@ -52,21 +51,25 @@ router.get('/is_question_active' , async (req ,res) => {
 router.get('/get_question' , async (req ,res) => {
     const requestData = req.query
     
+    if(!requestData.question_id){
+        return res.status(200).send({status: false})
+    }
+
     try {
 
         const result_questions = await sql.pool
         .request()
         .input('QID', sql.SQLInst.Int, requestData.question_id)
-        .execute('IsQon');
-        console.log(result_questions);
+        .execute('GetQList');
+
         
         const result_answers = await sql.pool
         .request()
         .input('QID' , sql.SQLInst.Int , requestData.question_id)
         .execute("GetQAnswers")
-        console.log(result_answers);
 
-        return res.status(200).send({status: true , question: result_questions.recordset , answsrs: result_answers.recordset});
+
+        return res.status(200).send({status: true , question: result_questions.recordset , answers: result_answers.recordset});
 
     } catch (e) {
         console.log(`Error in route /get_question` , e);
@@ -77,7 +80,7 @@ router.get('/get_question' , async (req ,res) => {
 
 router.post('/answer_question' , async (req , res) => {
     const {question_id , line , phone} = req.body
-
+    
     if(!question_id || !line || !phone){
         return res.status(200).send({status: false , err: errors.ANSWER_ERR })
     }
@@ -124,6 +127,28 @@ router.post('/change_question_date' , async (req ,res) => {
 
 })
 
+
+
+router.get('/get_question_list' , async (req ,res) => {
+    const {token} = req.body
+
+    if(token != "galmalkatoken"){
+        return res.status(401)
+    }
+
+    try {
+
+        const result = await sql.pool
+        .request()
+        .execute('GetQListAll');
+        
+        return res.status(200).send({status: true , res: result.recordset});
+
+    } catch (e) {
+        console.log(`Error in route /get_question_list` , e);
+        return res.status(200).send({status: false , err: errors.SQL_ERROR});
+    }
+})
 
 module.exports = router;
 
