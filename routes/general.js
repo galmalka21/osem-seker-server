@@ -5,6 +5,8 @@ const { errors } = require('../utils/error');
 
 
 router.get('/test' , (req ,res) => {
+    console.log("Test");
+    
     return res.status(200).send("OK")
 })
 
