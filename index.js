@@ -6,7 +6,7 @@ const app = express();
 const generalRoute = require('./routes/general')
 const cookieParser = require('cookie-parser');
 const websocket = require('./middleware/websocket');
-const port = 3000;
+const port = 8080;
 
 const corsOptions = {
     origin: 'https://witty-rock-00b5d0803.4.azurestaticapps.net', // Specify the exact origin
