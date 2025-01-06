@@ -1,32 +1,36 @@
-const express = require('express')
+const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const http = require('http');
-const https = require('https');
 const app = express();
-const generalRoute = require('./routes/general')
+const https = require('https')
+const generalRoute = require('./routes/general');
 const cookieParser = require('cookie-parser');
 const websocket = require('./middleware/websocket');
 const port = 3000;
 
-const corsOptions = {
-    origin: ['https://witty-rock-00b5d0803.4.azurestaticapps.net' , 'http://localhost:5173'], // Specify the exact origin
-    methods: ['GET', 'POST', 'PUT', 'OPTIONS', 'HEAD'], // Allow these methods
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization' , 'ngrok-skip-browser-warning'], // Specify headers
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-};
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    next();
+  });
 
-app.use(cors(corsOptions)); // Apply CORS middleware
+  app.use(cors({credentials: true , origin: [true, "https://witty-rock-00b5d0803.4.azurestaticapps.net"]}));
+
 // Configuring body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use('/general', generalRoute)
+app.use('/general', generalRoute);
 
-const server = http.createServer(app);
-
+// Initialize WebSocket middleware
+const server = https.createServer(app);
 websocket(server);
 
-server.listen(port, () => {
+app.get('/' , (req ,res)=> {
+    return res.status(200).send("OK")
+})
+
+app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });

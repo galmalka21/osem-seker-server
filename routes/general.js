@@ -17,7 +17,8 @@ router.post('/register' , async (req ,res) => {
     if(!username || !phone){
         return res.status(200).send({status: false , msg: errors.REGISTER_ERR})
     }
-
+    console.log("req");
+    
     try {
 
         const result = await sql.pool
