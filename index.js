@@ -6,7 +6,7 @@ const https = require('https')
 const generalRoute = require('./routes/general');
 const cookieParser = require('cookie-parser');
 const websocket = require('./middleware/websocket');
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
@@ -25,13 +25,15 @@ app.use(cors({credentials: true , origin: [true, "https://witty-rock-00b5d0803.4
 app.use('/general', generalRoute);
 
 // Initialize WebSocket middleware
-const server = https.createServer(app);
-websocket(server);
+
 
 app.get('/' , (req ,res)=> {
     return res.status(200).send("OK")
 })
 
-app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
-});
+const host = '0.0.0.0'; // Bind to all available IPs
+const server = app.listen(port , host, async () => {
+    console.log("Server running on port", port);
+})
+
+websocket(server);

@@ -14,7 +14,7 @@ router.get('/test' , (req ,res) => {
 router.post('/register' , async (req ,res) => {
     const {username , phone} = req.body
     
-    if(!username || !phone){
+    if(!phone){
         return res.status(200).send({status: false , msg: errors.REGISTER_ERR})
     }
     console.log("req");
