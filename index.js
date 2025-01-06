@@ -15,12 +15,13 @@ app.use((req, res, next) => {
     next();
   });
 
-  app.use(cors({credentials: true , origin: [true, "https://witty-rock-00b5d0803.4.azurestaticapps.net"]}));
 
 // Configuring body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors({credentials: true , origin: [true, "https://witty-rock-00b5d0803.4.azurestaticapps.net"]}));
+
 app.use('/general', generalRoute);
 
 // Initialize WebSocket middleware
